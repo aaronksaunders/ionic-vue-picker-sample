@@ -55,12 +55,18 @@ export default {
           },
           {
             text: "Confirm",
+            role: "confirm",
             handler: value => {
               console.log("Got Value", value);
               this.results = value;
+              picker.dismiss(value, "confirm");
             }
           }
         ]
+      });
+
+      picker.onDidDismiss().then(v => {
+        console.log(v);
       });
 
       // present the picker
@@ -81,7 +87,7 @@ export default {
       // to be associated with the text when selected
       //
       // in this example, ["Monday", "Mon"], the picker will render the full text "Monday",
-      // but the value selected will be "Mon". If there is not a value included, then it 
+      // but the value selected will be "Mon". If there is not a value included, then it
       // will default to the index of the row
       //
       let colOptions = [
@@ -127,7 +133,7 @@ export default {
       for (let i = 0; i < numColumns; i++) {
         let len = columnOptions[i].data.length;
 
-        // if a na,e is provided then set the object to the 
+        // if a na,e is provided then set the object to the
         // the name provided
         let colName = columnOptions[i].name || `col-${i}`;
         let col = {
@@ -142,7 +148,6 @@ export default {
     getColumnOptions(columnIndex, numOptions, columnOptions) {
       let options = [];
       for (let i = 0; i < numOptions; i++) {
-
         // if there is no value property provided in the column data
         // then set value to the row index
         if (typeof columnOptions[columnIndex].data[i] == "object") {
