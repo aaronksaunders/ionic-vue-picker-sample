@@ -24,6 +24,7 @@
 <style src='@ionic/core/css/ionic.bundle.css'></style>
 
 <script>
+/* eslint-disable no-alert, no-console */
 export default {
   name: "App",
   components: {},
