@@ -1,9 +1,14 @@
 <template>
   <ion-app class="ion-padding">
     <ion-content>
-      <ion-button @click="openSimplePicker">SHOW PICKER</ion-button>
-      <div style="margin:10px">
-       <pre>{{JSON.stringify(pickerResult, null,2)}}</pre>
+      <ion-button @click="openSimplePicker"
+        >Open Single Column Picker</ion-button
+      >
+      <ion-button @click="openComplexPicker"
+        >Open Multi Column Picker</ion-button
+      >
+      <div style="margin: 10px">
+        <pre>{{ JSON.stringify(pickerResult, null, 2) }}</pre>
       </div>
     </ion-content>
   </ion-app>
@@ -20,9 +25,8 @@ export default defineComponent({
     IonButton,
   },
   setup() {
-
     const pickerResult = ref<any>();
-    
+
     // HELPER FUNCTIONS FOR PICKERS
 
     const getColumnOptions = (
@@ -102,9 +106,65 @@ export default defineComponent({
       await picker.present();
     };
 
+    /**
+     * this is a multi colmn picker
+     */
+    const openComplexPicker = async () => {
+      // set the array for the column information, you can set the name of the column
+      // and the array of data that should be rendered in the column. In the array of data
+      // to add to the column you can set the text that will be rendered and the value
+      // to be associated with the text when selected
+      //
+      // in this example, ["Monday", "Mon"], the picker will render the full text "Monday",
+      // but the value selected will be "Mon". If there is not a value included, then it
+      // will default to the index of the row
+      //
+      const colOptions = [
+        {
+          name: "day",
+          data: [
+            ["Monday", "Mon"],
+            ["Tuesday", "Tues"],
+            ["Wednesday", "Wed"],
+            ["Thursday", "Thurs"],
+            ["Friday", "Fri"],
+          ],
+        },
+        {
+          name: "time",
+          data: ["9a", "12p", "3p", "6p"],
+        },
+      ];
+      const picker = await pickerController.create({
+        columns: getColumns(2, colOptions),
+        buttons: [
+          {
+            text: "Cancel",
+            role: "cancel",
+          },
+          {
+            text: "Confirm",
+            handler: (value) => {
+              console.log("Got Value", value);
+              console.log(value);
+              picker.dismiss(value, "confirm");
+            },
+          },
+        ],
+      });
+
+      picker.onDidDismiss().then((v) => {
+        console.log("onDidDismiss", v);
+        pickerResult.value = v;
+      });
+
+      await picker.present();
+    };
+
     return {
       openSimplePicker,
-      pickerResult
+      openComplexPicker,
+      pickerResult,
     };
   },
 });
